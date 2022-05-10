@@ -5,6 +5,8 @@ import click
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import r2_score
+from sklearn.metrics import v_measure_score
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -72,11 +74,19 @@ def train(
     with mlflow.start_run():
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
         pipeline.fit(features_train, target_train)
-        accuracy = accuracy_score(target_val, pipeline.predict(features_val))
+        predict_val = pipeline.predict(features_val)
+        accuracy = accuracy_score(target_val, predict_val)
+        r2_score_val = r2_score(target_val, predict_val)
+        v_measure_score_val = v_measure_score(target_val, predict_val)
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
         mlflow.log_metric("accuracy", accuracy)
+        mlflow.log_metric("r2_score", r2_score_val)
+        mlflow.log_metric("v_measure_score", v_measure_score_val)
+        mlflow.sklearn.log_model(pipeline, "model")
         click.echo(f"Accuracy: {accuracy}.")
+        click.echo(f"R2_score: {r2_score_val}.")
+        click.echo(f"V_measure_score: {v_measure_score_val}.")
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")

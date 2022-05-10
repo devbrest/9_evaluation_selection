@@ -3,6 +3,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 
+
 def create_pipeline(
     use_scaler: bool, max_iter: int, logreg_C: float, random_state: int
 ) -> Pipeline:
