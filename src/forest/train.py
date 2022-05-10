@@ -11,7 +11,7 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 
 from .data import get_dataset
-from .pipeline import create_pipeline
+from .pipeline import create_pipeline, create_pipeline_both_model
 
 
 @click.command()
@@ -60,7 +60,7 @@ from .pipeline import create_pipeline
     show_default=True,
 )
 @click.option(
-    "--max-depth",
+    "--max_depth",
     default=13,
     type=int,
     show_default=True,
@@ -85,6 +85,9 @@ def train(
     use_scaler: bool,
     max_iter: int,
     logreg_c: float,
+    max_depth: int,
+    f_eng: str,
+    cl: str
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -122,4 +125,19 @@ def train(
         click.echo(f"V_measure_score: {v_measure_score_val}.")
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")""";
-        
+        pipeline = create_pipeline_both_model(use_scaler, max_iter, logreg_c, random_state, f_eng, cl,max_depth)
+        pipeline.fit(features_train, target_train)
+        predict_val = pipeline.predict(features_val)
+        accuracy = accuracy_score(target_val, predict_val)
+        mlflow.log_param("use_scaler", use_scaler)
+        mlflow.log_param("max_iter", max_iter)
+        mlflow.log_param("logreg_c", logreg_c)
+        mlflow.log_param("feature_selection", f_eng)
+        mlflow.log_param("classifier", cl)
+        mlflow.log_param("max_depth", max_depth)
+        mlflow.log_metric("accuracy", accuracy)
+        click.echo(f"Accuracy: {accuracy}.")
+
+        dump(pipeline, save_model_path)
+        click.echo(f"Model is saved to {save_model_path}.")
+
