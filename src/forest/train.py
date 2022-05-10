@@ -59,6 +59,24 @@ from .pipeline import create_pipeline
     type=float,
     show_default=True,
 )
+@click.option(
+    "--max-depth",
+    default=13,
+    type=int,
+    show_default=True,
+)
+@click.option(
+    "--f_eng",
+    default="SelectFromModel",
+    type=click.Choice(['SelectFromModel', 'SequentialFeatureSelector'], case_sensitive=False),
+    show_default=True,
+)
+@click.option(
+    "--cl",
+    default="LogisticRegression",
+    type=click.Choice(['LogisticRegression', 'DecisionTreeClassifier'], case_sensitive=False),
+    show_default=True,
+)
 def train(
     dataset_path: Path,
     save_model_path: Path,
@@ -74,6 +92,7 @@ def train(
         test_split_ratio,
     )
     with mlflow.start_run():
+        """
         cv = KFold(n_splits=5, random_state=random_state, shuffle=True)
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
         scores = cross_val_score(pipeline, features_train, target_train, scoring='accuracy',
@@ -102,4 +121,5 @@ def train(
         click.echo(f"R2_score: {r2_score_val}.")
         click.echo(f"V_measure_score: {v_measure_score_val}.")
         dump(pipeline, save_model_path)
-        click.echo(f"Model is saved to {save_model_path}.")
+        click.echo(f"Model is saved to {save_model_path}.")""";
+        
