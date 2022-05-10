@@ -2,7 +2,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.feature_selection import SequentialFeatureSelector, SelectFromModel
+from sklearn.feature_selection import VarianceThreshold, SelectFromModel
 from sklearn.tree import DecisionTreeClassifier
 
 def create_pipeline(
@@ -31,7 +31,7 @@ def create_pipeline_both_model(
         pipeline_steps.append(
             (
             "feature_selection",
-            SequentialFeatureSelector(estimator=selection_model)
+            VarianceThreshold()
             )    
         )
     elif f_eng == 'SelectFromModel':

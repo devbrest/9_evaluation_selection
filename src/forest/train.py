@@ -67,8 +67,8 @@ from .pipeline import create_pipeline, create_pipeline_both_model
 )
 @click.option(
     "--f_eng",
-    default="SelectFromModel",
-    type=click.Choice(['SelectFromModel', 'SequentialFeatureSelector'], case_sensitive=False),
+    default="None",
+    type=click.Choice(['None','SelectFromModel', 'VarianceThreshold'], case_sensitive=False),
     show_default=True,
 )
 @click.option(
