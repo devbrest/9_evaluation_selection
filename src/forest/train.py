@@ -7,6 +7,8 @@ import mlflow.sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
 from sklearn.metrics import v_measure_score
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -72,12 +74,23 @@ def train(
         test_split_ratio,
     )
     with mlflow.start_run():
+        cv = KFold(n_splits=5, random_state=random_state, shuffle=True)
         pipeline = create_pipeline(use_scaler, max_iter, logreg_c, random_state)
-        pipeline.fit(features_train, target_train)
-        predict_val = pipeline.predict(features_val)
-        accuracy = accuracy_score(target_val, predict_val)
-        r2_score_val = r2_score(target_val, predict_val)
-        v_measure_score_val = v_measure_score(target_val, predict_val)
+        scores = cross_val_score(pipeline, features_train, target_train, scoring='accuracy',
+                         cv=cv)
+        accuracy = scores.mean()
+        scores = cross_val_score(pipeline, features_train, target_train, scoring='r2',
+                         cv=cv)
+        r2_score_val = scores.mean()
+        scores = cross_val_score(pipeline, features_train, target_train, scoring='v_measure_score',
+                         cv=cv)
+        v_measure_score_val = scores.mean()
+
+        #pipeline.fit(features_train, target_train)
+        #predict_val = pipeline.predict(features_val)
+        #accuracy = accuracy_score(target_val, predict_val)
+        #r2_score_val = r2_score(target_val, predict_val)
+        #v_measure_score_val = v_measure_score(target_val, predict_val)
         mlflow.log_param("use_scaler", use_scaler)
         mlflow.log_param("max_iter", max_iter)
         mlflow.log_param("logreg_c", logreg_c)
