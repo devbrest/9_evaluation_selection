@@ -23,3 +23,4 @@
 10. poetry run train_nested --use-nested=False --max_depth=... --n_estimators=... --max_features=... --criterion='...' используется для запуска с оптимальными параметрами
 11. Для следующих заданий нужно запустить poetry install
 12. Для запуска теста выполнить poetry run pytest
+13. Для установки nox  в терминале ввести pip install --user --upgrade nox
