@@ -5,13 +5,14 @@ import click
 import mlflow
 import mlflow.sklearn
 from sklearn.metrics import accuracy_score
-from sklearn.metrics import r2_score
-from sklearn.metrics import v_measure_score
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score
+
+# from sklearn.metrics import r2_score
+# from sklearn.metrics import v_measure_score
+# from sklearn.model_selection import KFold
+# from sklearn.model_selection import cross_val_score
 
 from .data import get_dataset
-from .pipeline import create_pipeline, create_pipeline_both_model
+from .pipeline import create_pipeline_both_model  # , create_pipeline
 from math import inf
 
 

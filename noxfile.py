@@ -7,7 +7,7 @@ import nox
 from nox.sessions import Session
 
 
-nox.options.sessions = "black", "lint", "mypy", "tests"
+nox.options.sessions = "black", "mypy", "tests", "lint"
 locations = "src", "noxfile.py"
 
 
@@ -40,8 +40,10 @@ def black(session: Session) -> None:
 
 @nox.session(python="3.9")
 def lint(session: Session) -> None:
-    session.install("flake8")
-    session.run("flake8")
+    """Run lint code formatter."""
+    args = session.posargs or locations
+    install_with_constraints(session, "flake8")
+    session.run("flake8", *args)
 
 
 @nox.session(python="3.9")

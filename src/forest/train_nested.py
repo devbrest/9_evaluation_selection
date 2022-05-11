@@ -9,11 +9,12 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import r2_score
 from sklearn.metrics import v_measure_score
 from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import RandomForestClassifier
 
 from .data import get_dataset
-from .pipeline import create_pipeline_nested
+
+# from .pipeline import create_pipeline_nested
 
 
 @click.command()
@@ -94,7 +95,7 @@ def train_nested(
         dataset_path, random_state, test_split_ratio
     )
 
-    if use_nested == True:
+    if use_nested is True:
 
         param_grid = {
             "max_depth": [10, 20, 40, None],

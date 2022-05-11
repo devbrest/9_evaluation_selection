@@ -27,6 +27,7 @@
 12. Для запуска теста выполнить poetry run pytest
 
 13. Для установки nox  в терминале ввести pip install --user --upgrade nox
+14. Для проверки заданий 12, 13, 14 запустите nox,  или nox  с указанием полного пути к папке установки скрипта
 
 Задание 12
 ![image](https://user-images.githubusercontent.com/75991746/167876179-ded43384-3fc1-4d76-ab73-82aaa4ae0d4c.png)
