@@ -12,7 +12,7 @@ from sklearn.model_selection import cross_val_score
 
 from .data import get_dataset
 from .pipeline import create_pipeline, create_pipeline_both_model
-
+from math import inf
 
 @click.command()
 @click.option(
@@ -62,7 +62,7 @@ from .pipeline import create_pipeline, create_pipeline_both_model
 @click.option(
     "--max_depth",
     default=13,
-    type=int,
+    type=click.IntRange(0,inf),
     show_default=True,
 )
 @click.option(

@@ -21,3 +21,5 @@
 9. Для запуска 9-го задания в терминале запустите poetry run train_nested без параметров, в этом случае будет запущен поиск 
 оптимальных параметров
 10. poetry run train_nested --use-nested=False --max_depth=... --n_estimators=... --max_features=... --criterion='...' используется для запуска с оптимальными параметрами
+11. Для следующих заданий нужно запустить poetry install
+12. Для запуска теста выполнить poetry run pytest
