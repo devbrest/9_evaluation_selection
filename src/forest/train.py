@@ -14,6 +14,7 @@ from .data import get_dataset
 from .pipeline import create_pipeline, create_pipeline_both_model
 from math import inf
 
+
 @click.command()
 @click.option(
     "-d",
@@ -62,19 +63,23 @@ from math import inf
 @click.option(
     "--max_depth",
     default=13,
-    type=click.IntRange(0,inf),
+    type=click.IntRange(0, inf),
     show_default=True,
 )
 @click.option(
     "--f_eng",
     default="None",
-    type=click.Choice(['None','SelectFromModel', 'VarianceThreshold'], case_sensitive=False),
+    type=click.Choice(
+        ["None", "SelectFromModel", "VarianceThreshold"], case_sensitive=False
+    ),
     show_default=True,
 )
 @click.option(
     "--cl",
     default="LogisticRegression",
-    type=click.Choice(['LogisticRegression', 'DecisionTreeClassifier'], case_sensitive=False),
+    type=click.Choice(
+        ["LogisticRegression", "DecisionTreeClassifier"], case_sensitive=False
+    ),
     show_default=True,
 )
 def train(
@@ -87,7 +92,7 @@ def train(
     logreg_c: float,
     max_depth: int,
     f_eng: str,
-    cl: str
+    cl: str,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -124,8 +129,10 @@ def train(
         click.echo(f"R2_score: {r2_score_val}.")
         click.echo(f"V_measure_score: {v_measure_score_val}.")
         dump(pipeline, save_model_path)
-        click.echo(f"Model is saved to {save_model_path}.")""";
-        pipeline = create_pipeline_both_model(use_scaler, max_iter, logreg_c, random_state, f_eng, cl,max_depth)
+        click.echo(f"Model is saved to {save_model_path}.")"""
+        pipeline = create_pipeline_both_model(
+            use_scaler, max_iter, logreg_c, random_state, f_eng, cl, max_depth
+        )
         pipeline.fit(features_train, target_train)
         predict_val = pipeline.predict(features_val)
         accuracy = accuracy_score(target_val, predict_val)
@@ -140,6 +147,7 @@ def train(
 
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
+
 
 def train_nested(
     dataset_path: Path,
@@ -151,7 +159,7 @@ def train_nested(
     logreg_c: float,
     max_depth: int,
     f_eng: str,
-    cl: str
+    cl: str,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -188,8 +196,10 @@ def train_nested(
         click.echo(f"R2_score: {r2_score_val}.")
         click.echo(f"V_measure_score: {v_measure_score_val}.")
         dump(pipeline, save_model_path)
-        click.echo(f"Model is saved to {save_model_path}.")""";
-        pipeline = create_pipeline_both_model(use_scaler, max_iter, logreg_c, random_state, f_eng, cl,max_depth)
+        click.echo(f"Model is saved to {save_model_path}.")"""
+        pipeline = create_pipeline_both_model(
+            use_scaler, max_iter, logreg_c, random_state, f_eng, cl, max_depth
+        )
         pipeline.fit(features_train, target_train)
         predict_val = pipeline.predict(features_val)
         accuracy = accuracy_score(target_val, predict_val)
@@ -204,4 +214,3 @@ def train_nested(
 
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
-

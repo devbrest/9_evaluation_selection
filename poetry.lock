@@ -37,7 +37,7 @@ tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>
 
 [[package]]
 name = "black"
-version = "21.12b0"
+version = "22.3.0"
 description = "The uncompromising code formatter."
 category = "dev"
 optional = false

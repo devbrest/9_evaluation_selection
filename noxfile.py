@@ -7,7 +7,7 @@ import nox
 from nox.sessions import Session
 
 
-nox.options.sessions = "black", "mypy", "tests"
+nox.options.sessions = "black", "lint", "mypy", "tests"
 locations = "src", "noxfile.py"
 
 
@@ -37,11 +37,13 @@ def black(session: Session) -> None:
     install_with_constraints(session, "black")
     session.run("black", *args)
 
+
 @nox.session(python="3.9")
 def lint(session: Session) -> None:
-    session.install('flake8')
-    session.run('flake8', '--import-order-style', 'google')
-    
+    session.install("flake8")
+    session.run("flake8")
+
+
 @nox.session(python="3.9")
 def mypy(session: Session) -> None:
     """Type-check using mypy."""

@@ -67,7 +67,6 @@ from .pipeline import create_pipeline_nested
     type=int,
     show_default=True,
 )
-
 @click.option(
     "--max_features",
     default="None",
@@ -76,7 +75,7 @@ from .pipeline import create_pipeline_nested
 @click.option(
     "--criterion",
     default="gini",
-    type=click.Choice(['gini', 'entropy'], case_sensitive=False),
+    type=click.Choice(["gini", "entropy"], case_sensitive=False),
     show_default=True,
 )
 def train_nested(
@@ -84,48 +83,51 @@ def train_nested(
     save_model_path: Path,
     random_state: int,
     test_split_ratio: float,
-    use_scaler: bool,    
+    use_scaler: bool,
     use_nested: bool,
     max_depth: int,
     n_estimators: int,
     max_features: int,
-    criterion: str
-    
+    criterion: str,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
-        dataset_path,
-        random_state,
-        test_split_ratio
+        dataset_path, random_state, test_split_ratio
     )
-    
+
     if use_nested == True:
-            
-            
+
         param_grid = {
-            'max_depth': [10, 20, 40, None],
-            'n_estimators': np.arange(1, 201, step=50),
-            'max_features':["auto", "sqrt", "log2"],
-            'criterion': ['gini','entropy']
+            "max_depth": [10, 20, 40, None],
+            "n_estimators": np.arange(1, 201, step=50),
+            "max_features": ["auto", "sqrt", "log2"],
+            "criterion": ["gini", "entropy"],
         }
-        #cv_outer = KFold(n_splits=3, random_state=None, shuffle=True)
+        # cv_outer = KFold(n_splits=3, random_state=None, shuffle=True)
         cv_outer = KFold(n_splits=2)
         outer_results = list()
         for train_ix, test_ix in cv_outer.split(features_train):
             with mlflow.start_run():
-            # split data
-            #print(train_ix)
-                X_train, X_test = features_train.iloc[train_ix], features_train.iloc[test_ix]
-                y_train, y_test = target_train.iloc[train_ix], target_train.iloc[test_ix]
-            #X_train = features_train.iloc[train_ix]
-            #y_train = target_train.iloc[train_ix]
-            
-                
-        # configure the cross-validation procedure
+                # split data
+                # print(train_ix)
+                X_train, X_test = (
+                    features_train.iloc[train_ix],
+                    features_train.iloc[test_ix],
+                )
+                y_train, y_test = (
+                    target_train.iloc[train_ix],
+                    target_train.iloc[test_ix],
+                )
+                # X_train = features_train.iloc[train_ix]
+                # y_train = target_train.iloc[train_ix]
+
+                # configure the cross-validation procedure
                 cv_inner = KFold(n_splits=2)
-        # define the model
-                model = RandomForestClassifier() #create_pipeline_nested()
-            # define search
-                search = GridSearchCV(model, param_grid, scoring='accuracy', cv=cv_inner, refit=True)
+                # define the model
+                model = RandomForestClassifier()  # create_pipeline_nested()
+                # define search
+                search = GridSearchCV(
+                    model, param_grid, scoring="accuracy", cv=cv_inner, refit=True
+                )
                 # execute search
                 result = search.fit(X_train, y_train)
                 # get the best performing model fit on the whole training set
@@ -137,18 +139,23 @@ def train_nested(
                 acc = accuracy_score(y_test, yhat)
                 # store the result
                 outer_results.append(acc)
-                mlflow.log_param("max_depth", best_params['max_depth'])
-                mlflow.log_param("n_estimators", best_params['n_estimators'])
-                mlflow.log_param("max_features", best_params['max_features'])
-                mlflow.log_param("criterion", best_params['criterion'])
-                
+                mlflow.log_param("max_depth", best_params["max_depth"])
+                mlflow.log_param("n_estimators", best_params["n_estimators"])
+                mlflow.log_param("max_features", best_params["max_features"])
+                mlflow.log_param("criterion", best_params["criterion"])
+
                 mlflow.log_metric("accuracy", acc)
     else:
-            
-        with mlflow.start_run():        
 
-            #pipeline = create_pipeline_nested(max_depth=max_depth,n_estimators=n_estimators,max_features=max_features,criterion=criterion)
-            model = RandomForestClassifier(max_depth=max_depth,n_estimators=n_estimators,max_features=max_features,criterion=criterion)
+        with mlflow.start_run():
+
+            # pipeline = create_pipeline_nested(max_depth=max_depth,n_estimators=n_estimators,max_features=max_features,criterion=criterion)
+            model = RandomForestClassifier(
+                max_depth=max_depth,
+                n_estimators=n_estimators,
+                max_features=max_features,
+                criterion=criterion,
+            )
             model.fit(features_train, target_train)
             predict_val = model.predict(features_val)
             accuracy = accuracy_score(target_val, predict_val)
@@ -167,5 +174,3 @@ def train_nested(
             click.echo(f"V_measure_score: {v_measure_score_val}.")
             dump(model, save_model_path)
             click.echo(f"Model is saved to {save_model_path}.")
-            
-

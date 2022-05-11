@@ -5,6 +5,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_selection import VarianceThreshold, SelectFromModel
 from sklearn.tree import DecisionTreeClassifier
 
+
 def create_pipeline(
     use_scaler: bool, max_iter: int, logreg_C: float, random_state: int
 ) -> Pipeline:
@@ -20,30 +21,30 @@ def create_pipeline(
         )
     )
     return Pipeline(steps=pipeline_steps)
+
+
 def create_pipeline_both_model(
-    use_scaler: bool, max_iter: int, logreg_C: float, random_state: int, f_eng: str, cl: str, max_depth: int
+    use_scaler: bool,
+    max_iter: int,
+    logreg_C: float,
+    random_state: int,
+    f_eng: str,
+    cl: str,
+    max_depth: int,
 ) -> Pipeline:
     pipeline_steps = []
     if use_scaler:
         pipeline_steps.append(("scaler", StandardScaler()))
     selection_model = RandomForestClassifier(max_depth=13)
-    if f_eng == 'SequentialFeatureSelector':
+    if f_eng == "SequentialFeatureSelector":
+        pipeline_steps.append(("feature_selection", VarianceThreshold()))
+    elif f_eng == "SelectFromModel":
         pipeline_steps.append(
-            (
-            "feature_selection",
-            VarianceThreshold()
-            )    
+            ("feature_selection", SelectFromModel(estimator=selection_model))
         )
-    elif f_eng == 'SelectFromModel':
-        pipeline_steps.append(
-            (
-            "feature_selection",
-            SelectFromModel(estimator=selection_model)
-            )    
-        )    
-   
-    if cl == 'LogisticRegression':
-        
+
+    if cl == "LogisticRegression":
+
         pipeline_steps.append(
             (
                 "classifier",
@@ -52,35 +53,42 @@ def create_pipeline_both_model(
                 ),
             )
         )
-    elif cl == 'DecisionTreeClassifier':
+    elif cl == "DecisionTreeClassifier":
         pipeline_steps.append(
             (
                 "classifier",
-                DecisionTreeClassifier(
-                    random_state=random_state, max_depth=max_depth
-                ),
+                DecisionTreeClassifier(random_state=random_state, max_depth=max_depth),
             )
         )
     return Pipeline(steps=pipeline_steps)
+
+
 def create_pipeline_nested(
-    use_scaler: bool = True, random_state: int = 42, max_depth: int = 10, n_estimators: int = 10, max_features: int = 15, criterion: str = "gini"
+    use_scaler: bool = True,
+    random_state: int = 42,
+    max_depth: int = 10,
+    n_estimators: int = 10,
+    max_features: int = 15,
+    criterion: str = "gini",
 ) -> Pipeline:
     pipeline_steps = []
     if use_scaler:
         pipeline_steps.append(("scaler", StandardScaler()))
-    selection_model = RandomForestClassifier(max_depth=13,n_estimators=n_estimators,max_features=max_features)
+    selection_model = RandomForestClassifier(
+        max_depth=13, n_estimators=n_estimators, max_features=max_features
+    )
     pipeline_steps.append(
-        (
-        "feature_selection",
-        SelectFromModel(estimator=selection_model)
-        )    
-        )    
-   
+        ("feature_selection", SelectFromModel(estimator=selection_model))
+    )
+
     pipeline_steps.append(
         (
             "classifier",
             DecisionTreeClassifier(
-                random_state=random_state, max_depth=max_depth,max_features=max_features,criterion=criterion
+                random_state=random_state,
+                max_depth=max_depth,
+                max_features=max_features,
+                criterion=criterion,
             ),
         )
     )
