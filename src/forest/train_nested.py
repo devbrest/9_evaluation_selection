@@ -130,16 +130,17 @@ def train_nested(
                 result = search.fit(X_train, y_train)
                 # get the best performing model fit on the whole training set
                 best_model = result.best_estimator_
+                best_params = result.best_params_
                 # evaluate model on the hold out dataset
                 yhat = best_model.predict(X_test)
                 # evaluate the model
                 acc = accuracy_score(y_test, yhat)
                 # store the result
                 outer_results.append(acc)
-                mlflow.log_param("max_depth", best_model.max_depth)
-                mlflow.log_param("n_estimators", best_model.n_estimators)
-                mlflow.log_param("max_features", best_model.max_features)
-                mlflow.log_param("criterion", best_model.criterion)
+                mlflow.log_param("max_depth", best_params['max_depth'])
+                mlflow.log_param("n_estimators", best_params['n_estimators'])
+                mlflow.log_param("max_features", best_params['max_features'])
+                mlflow.log_param("criterion", best_params['criterion'])
                 
                 mlflow.log_metric("accuracy", acc)
         else:
