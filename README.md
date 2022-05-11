@@ -1,4 +1,11 @@
 # 9_evaluation_selection
+Задание 2
+Домашняя работа овормлена как package с использованием src layout. Выбор обусловлен удобством в дальнейшем использовать Poetry для запуска кода в таком случае.
+
+Задание 5
+
+![image](https://user-images.githubusercontent.com/75991746/167882335-1c900bb8-e72b-4149-b1e3-c53c924c636c.png)
+
 Задание 7
 ![image](https://user-images.githubusercontent.com/75991746/167729482-b9f12c4e-fce5-462e-82fe-6ec563715bcd.png)
 
@@ -31,6 +38,9 @@
 
 Задание 12
 ![image](https://user-images.githubusercontent.com/75991746/167876179-ded43384-3fc1-4d76-ab73-82aaa4ae0d4c.png)
+
+![image](https://user-images.githubusercontent.com/75991746/167881073-c93a8081-69a3-4f32-89e8-ae21cf6e8fc4.png)
+
 Задание 13
 ![image](https://user-images.githubusercontent.com/75991746/167876463-bd8c5c5d-4039-4b08-8ea0-4ba31d3c8413.png)
 
