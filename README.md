@@ -1,9 +1,12 @@
 # 9_evaluation_selection
+Задание 7
 ![image](https://user-images.githubusercontent.com/75991746/167729482-b9f12c4e-fce5-462e-82fe-6ec563715bcd.png)
 
 Задание 8
 ![image](https://user-images.githubusercontent.com/75991746/167732018-e43b3455-51ab-440f-a443-3f83da8a93bc.png)
+
 Задание 9
+![image](https://user-images.githubusercontent.com/75991746/167841002-97cc793b-4456-4a06-8de6-d76dcc0ad6a1.png)
 
 Задание 10
 Инструкция:
