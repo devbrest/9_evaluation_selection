@@ -100,14 +100,15 @@ def train_nested(
     with mlflow.start_run():
         if use_nested == True:
             
-            cv_outer = KFold(n_splits=10,random_state=random_state,shuffle=True)
+            
             param_grid = {
-                'max_depth': [10, 20, 30, None],
-                'n_estimators': np.arange(100, 1000, step=100),
+                'max_depth': [10, 20, 40, None],
+                'n_estimators': np.arange(1, 201, step=50),
                 'max_features':["auto", "sqrt", "log2"],
                 'criterion': ['gini','entropy']
             }
-            cv_outer = KFold(n_splits=5, random_state=random_state, shuffle=True)
+            #cv_outer = KFold(n_splits=3, random_state=None, shuffle=True)
+            cv_outer = KFold(n_splits=2)
             outer_results = list()
             for train_ix, test_ix in cv_outer.split(features_train):
                 
@@ -120,7 +121,7 @@ def train_nested(
             
                 
             # configure the cross-validation procedure
-                cv_inner = KFold(n_splits=3)
+                cv_inner = KFold(n_splits=2)
             # define the model
                 model = RandomForestClassifier() #create_pipeline_nested()
             # define search
