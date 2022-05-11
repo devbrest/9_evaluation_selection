@@ -10,6 +10,7 @@ from sklearn.metrics import r2_score
 from sklearn.metrics import v_measure_score
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
 
 from .data import get_dataset
 from .pipeline import create_pipeline_nested
@@ -61,8 +62,8 @@ from .pipeline import create_pipeline_nested
     show_default=True,
 )
 @click.option(
-    "--max_depth",
-    default=13,
+    "--n_estimators",
+    default=100,
     type=int,
     show_default=True,
 )
@@ -70,7 +71,6 @@ from .pipeline import create_pipeline_nested
 @click.option(
     "--max_features",
     default="None",
-    type=int,
     show_default=True,
 )
 @click.option(
@@ -100,27 +100,29 @@ def train_nested(
     with mlflow.start_run():
         if use_nested == True:
             
-            cv_outer = KFold(n_splits=10, shuffle=True, random_state=1)
+            cv_outer = KFold(n_splits=10,random_state=random_state,shuffle=True)
             param_grid = {
                 'max_depth': [10, 20, 30, None],
                 'n_estimators': np.arange(100, 1000, step=100),
                 'max_features':["auto", "sqrt", "log2"],
                 'criterion': ['gini','entropy']
             }
-            cv_outer = KFold(n_splits=5, random_state=random_state)
+            cv_outer = KFold(n_splits=5, random_state=random_state, shuffle=True)
             outer_results = list()
             for train_ix, test_ix in cv_outer.split(features_train):
                 
                 # split data
-                
-                X_train, X_test = features_train[train_ix,:], features_train[test_ix,:]
-                y_train, y_test = target_train[train_ix], target_train[test_ix]
+                #print(train_ix)
+                X_train, X_test = features_train.iloc[train_ix], features_train.iloc[test_ix]
+                y_train, y_test = target_train.iloc[train_ix], target_train.iloc[test_ix]
+                #X_train = features_train.iloc[train_ix]
+                #y_train = target_train.iloc[train_ix]
             
                 
             # configure the cross-validation procedure
-                cv_inner = KFold(n_splits=3, shuffle=True, random_state=1)
+                cv_inner = KFold(n_splits=3)
             # define the model
-                model = create_pipeline_nested()
+                model = RandomForestClassifier() #create_pipeline_nested()
             # define search
                 search = GridSearchCV(model, param_grid, scoring='accuracy', cv=cv_inner, refit=True)
                 # execute search
