@@ -62,3 +62,26 @@ def create_pipeline_both_model(
             )
         )
     return Pipeline(steps=pipeline_steps)
+def create_pipeline_nested(
+    use_scaler=True, random_state=42, max_depth=10, n_estimators = 10, max_features= 15, criterion="gini"
+) -> Pipeline:
+    pipeline_steps = []
+    if use_scaler:
+        pipeline_steps.append(("scaler", StandardScaler()))
+    selection_model = RandomForestClassifier(max_depth=13,n_estimators=n_estimators,max_features=max_features)
+    pipeline_steps.append(
+        (
+        "feature_selection",
+        SelectFromModel(estimator=selection_model)
+        )    
+        )    
+   
+    pipeline_steps.append(
+        (
+            "classifier",
+            DecisionTreeClassifier(
+                random_state=random_state, max_depth=max_depth,max_features=max_features,criterion=criterion
+            ),
+        )
+    )
+    return Pipeline(steps=pipeline_steps)
